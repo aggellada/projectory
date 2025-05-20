@@ -12,7 +12,7 @@ export default async function Dashboard() {
   const isLoggedIn = await isAuthenticated();
   const user = await getUser();
 
-  if (!authenticated) return redirect("api/auth/login");
+  if (!isLoggedIn) return redirect("api/auth/login");
 
   if (!user?.id) {
     throw new Error("User not found");
