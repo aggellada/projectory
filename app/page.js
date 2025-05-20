@@ -3,12 +3,11 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
-  // const { isAuthenticated } = getKindeServerSession();
-  // const user = await isAuthenticated();
+  const { isAuthenticated } = getKindeServerSession();
 
-  // if (!user) {
-  //   redirect("/home");
-  // }
+  if (await isAuthenticated()) {
+    redirect("/dashboard");
+  }
 
   return (
     <div className="relative w-full min-h-screen flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 text-white overflow-hidden">
