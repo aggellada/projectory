@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import ProjectManagement from "@/component/ProjectManagement";
 import Sidebar from "@/component/Sidebar";
 import { prisma } from "@/lib/prisma";
