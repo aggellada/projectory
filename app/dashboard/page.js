@@ -11,9 +11,11 @@ export default async function Dashboard() {
   const isLoggedIn = await isAuthenticated();
   const user = await getUser();
 
+  console.log(user);
+
   const projectsData = await prisma.project.findMany({
     where: {
-      userId: user.id,
+      userId: user?.id,
     },
     include: { tasks: true },
   });
