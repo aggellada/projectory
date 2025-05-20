@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Header from "@/component/Header";
 import Footer from "@/component/Footer";
+import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
   const { isAuthenticated, getUser } = getKindeServerSession();
@@ -11,7 +12,11 @@ export default async function Dashboard() {
   const isLoggedIn = await isAuthenticated();
   const user = await getUser();
 
-  console.log(user);
+  if (!authenticated) return redirect("api/auth/login");
+
+  if (!user?.id) {
+    throw new Error("User not found");
+  }
 
   const projectsData = await prisma.project.findMany({
     where: {
