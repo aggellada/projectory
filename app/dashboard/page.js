@@ -1,6 +1,5 @@
 import ProjectManagement from "@/component/ProjectManagement";
 import Sidebar from "@/component/Sidebar";
-import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Header from "@/component/Header";
@@ -11,10 +10,6 @@ export default async function Dashboard() {
 
   const isLoggedIn = await isAuthenticated();
   const user = await getUser();
-
-  if (!isLoggedIn) {
-    redirect("/home");
-  }
 
   const projectsData = await prisma.project.findMany({
     where: {
