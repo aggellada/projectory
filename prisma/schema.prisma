@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  project     String
+  description String
+  completed   Boolean  @default(false)
+  date        DateTime
+  tasks       Task[]
+  userId      String
+}
+
+model Task {
+  id        String  @id @default(cuid())
+  title     String
+  completed Boolean @default(false)
+  backlog   Boolean @default(false)
+  doing     Boolean @default(false)
+  review    Boolean @default(false)
+  role      Boolean @default(false)
+  project   Project @relation(fields: [projectId], references: [id]) // Defines the relationship with Project
+  projectId String // This is the foreign key that references Project
+}
