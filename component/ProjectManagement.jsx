@@ -5,11 +5,14 @@ import Modal from "./Modal";
 import Link from "next/link";
 import { deleteProject, doneProject, undoneProject } from "@/util/form";
 import CircularProgressBar from "./CircularProgressBar";
+import { Loader2 } from "lucide-react";
 
 export default function ProjectManagement({ projectsData, tasksData }) {
   const [addProject, setAddProject] = useState(false);
   const [expandIndex, setExpandIndex] = useState(null);
   const [sortSelected, setSortSelected] = useState(null);
+  const [deleting, setDeleting] = useState(null);
+  const [updating, setUpdating] = useState(null);
 
   const modalRef = useRef();
 
@@ -49,10 +52,19 @@ export default function ProjectManagement({ projectsData, tasksData }) {
     if (expandIndex === index) setExpandIndex(false);
   }
 
+  console.log("updating: ", updating);
+
   return (
     <>
       <Modal ref={modalRef} handleCloseModal={handleCloseModal} />
-      <div className="w-full min-h-[85vh] grow flex flex-col">
+      <div className="w-full min-h-[85vh] grow flex flex-col relative">
+        {(deleting || updating) && (
+          <div className="w-[150px] h-[50px] rounded-4xl absolute bottom-2 right-10 bg-zinc-100 flex gap-4 items-center px-4 text-black">
+            <Loader2 className="animate-spin text-black" />
+            {deleting && <h1>Deleting</h1>}
+            {updating && <h1>Updating</h1>}
+          </div>
+        )}
         <div className="w-full h-fit flex flex-col md:flex-row pt-6 px-12 gap-2">
           <div className="h-full w-full flex flex-col justify-center">
             <h1 className="font-bold text-3xl">Projects</h1>
@@ -94,7 +106,6 @@ export default function ProjectManagement({ projectsData, tasksData }) {
                 const diffInDays = Math.floor(
                   diffInMilliseconds / (1000 * 60 * 60 * 24)
                 );
-
                 const wordedDate = new Date(formObj.date).toLocaleDateString(
                   "en-US",
                   {
@@ -132,15 +143,6 @@ export default function ProjectManagement({ projectsData, tasksData }) {
                       : 0
                     : (completedCount / totalCount) * 100;
 
-                // const correspondingData = projectsData.find(
-                //   (projData) => projData.projectId === formObj.projectId
-                // );
-
-                // const noTasks =
-                //   formObj.completed && correspondingData.tasks.length === 0
-                //     ? 32
-                //     : 0;
-
                 const allTasksCompleted =
                   formObj.tasks.length > 0 &&
                   formObj.tasks.every((task) => task.completed);
@@ -164,10 +166,20 @@ export default function ProjectManagement({ projectsData, tasksData }) {
                         </button>
                         {expandIndex === i && (
                           <div className="bg-[#030711] flex flex-col border-2 border-gray-700 w-[100px] z-20">
-                            {formObj.completed && allTasksCompleted ? (
+                            {(formObj.tasks.length === 0 &&
+                              formObj.completed) ||
+                            allTasksCompleted ? (
                               <button
-                                onClick={(e) => {
-                                  undoneProject(formObj.id);
+                                onClick={async (e) => {
+                                  e.preventDefault();
+                                  setUpdating(true);
+                                  try {
+                                    await undoneProject(formObj.id);
+                                  } catch (err) {
+                                    console.error("Failed to update:", err);
+                                  } finally {
+                                    setUpdating(null);
+                                  }
                                   expandDropdown(e, i);
                                 }}
                               >
@@ -175,8 +187,16 @@ export default function ProjectManagement({ projectsData, tasksData }) {
                               </button>
                             ) : (
                               <button
-                                onClick={(e) => {
-                                  doneProject(formObj.id);
+                                onClick={async (e) => {
+                                  e.preventDefault();
+                                  setUpdating(true);
+                                  try {
+                                    await doneProject(formObj.id);
+                                  } catch (err) {
+                                    console.error("Failed to update:", err);
+                                  } finally {
+                                    setUpdating(null);
+                                  }
                                   expandDropdown(e, i);
                                 }}
                               >
@@ -185,8 +205,16 @@ export default function ProjectManagement({ projectsData, tasksData }) {
                             )}
 
                             <button
-                              onClick={(e) => {
-                                deleteProject(formObj.id);
+                              onClick={async (e) => {
+                                e.preventDefault();
+                                setDeleting(formObj.id);
+                                try {
+                                  await deleteProject(formObj.id);
+                                } catch (err) {
+                                  console.error("Failed to delete:", err);
+                                } finally {
+                                  setDeleting(null);
+                                }
                                 expandDropdown(e, i);
                               }}
                             >
@@ -198,7 +226,9 @@ export default function ProjectManagement({ projectsData, tasksData }) {
                       <div className="w-full md:w-4/5 h-full flex flex-col bg-[hsla(215,28%,17%,0.464)]">
                         <div className="flex justify-center items-start gap-4 md:gap-8 px-4 pt-2">
                           <button className="w-full bg-[rgb(23,23,114))] rounded-3xl">
-                            {formObj.completed && allTasksCompleted
+                            {(formObj.tasks.length === 0 &&
+                              formObj.completed) ||
+                            allTasksCompleted
                               ? "DONE"
                               : "IN PROGRESS"}
                           </button>

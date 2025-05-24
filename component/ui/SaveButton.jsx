@@ -4,8 +4,6 @@ import { useFormStatus } from "react-dom";
 export default function SaveButton({ handleCloseModal }) {
   const { pending, data } = useFormStatus();
 
-  console.log(pending, data);
-
   useEffect(() => {
     if (!data && !pending) {
       handleCloseModal();

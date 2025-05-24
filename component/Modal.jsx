@@ -1,39 +1,16 @@
 "use client";
 
 import newProject from "@/util/form";
-import { forwardRef, useEffect, useRef, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { forwardRef } from "react";
 import SaveButton from "./ui/SaveButton";
 
 const Modal = forwardRef(function ({ handleCloseModal }, ref) {
-  // const SaveButton = () => {
-  //   const { pending } = useFormStatus();
-  //   return (
-  //     <button
-  //       disabled={pending}
-  //       type="submit"
-  //       className="bg-purple-700 text-white px-4 py-1 rounded-2xl hover:cursor-pointer"
-  //     >
-  //       {pending ? "Uploading..." : "Save"}
-  //     </button>
-  //   );
-  // };
-  // const { pending, data } = useFormStatus();
-
-  // console.log(pending, data);
-
   return (
     <dialog
       ref={ref}
       onClose={handleCloseModal}
       className="m-auto p-12 rounded-2xl border-2 border-violet-900 bg-[hsl(224,71%,4%)] text-white backdrop:bg-[rgba(0,0,0,0.692)]"
     >
-      {/* {data && (
-        <>
-          <h1>A new project has been added successfully!</h1>
-          <button>Close</button>
-        </>
-      )} */}
       <div className="flex flex-col items-center gap-4 pb-6">
         <h1 className="font-bold text-2xl">Add Project Entry</h1>
         <p>Fill in the form below</p>
@@ -72,14 +49,6 @@ const Modal = forwardRef(function ({ handleCloseModal }, ref) {
           >
             Close
           </button>
-          {/* <button
-            type="submit"
-            className="bg-purple-700 text-white px-4 py-1 rounded-2xl hover:cursor-pointer"
-            // onClick={handleCloseModal}
-            disabled={pending}
-          >
-            {pending ? "Uploading..." : "Save"}
-          </button> */}
           <SaveButton handleCloseModal={handleCloseModal} />
         </div>
       </form>
