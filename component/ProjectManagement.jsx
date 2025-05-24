@@ -57,9 +57,9 @@ export default function ProjectManagement({ projectsData, tasksData }) {
   return (
     <>
       <Modal ref={modalRef} handleCloseModal={handleCloseModal} />
-      <div className="w-full min-h-[85vh] grow flex flex-col relative">
+      <div className="w-full min-h-[85vh] grow flex flex-col">
         {(deleting || updating) && (
-          <div className="w-[150px] h-[50px] rounded-4xl absolute bottom-2 right-10 bg-zinc-100 flex gap-4 items-center px-4 text-black">
+          <div className="w-[150px] h-[50px] rounded-4xl fixed bottom-10 right-10 bg-zinc-100 flex gap-4 items-center px-4 text-black">
             <Loader2 className="animate-spin text-black" />
             {deleting && <h1>Deleting</h1>}
             {updating && <h1>Updating</h1>}

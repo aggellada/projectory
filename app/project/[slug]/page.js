@@ -154,11 +154,13 @@ export default async function ProjectPage({ params }) {
           </div>
           {tasks.length === 0 && <h1>No tasks has been added yet.</h1>}
           {reversedTasks.map((task) => {
-            if (project.completed && !task.completed) {
-              return <Tasks task={task} slug={slug} key={task.id} />;
-            } else if (!project.completed) {
+            if ((project.completed && !task.completed) || !project.completed) {
               return <Tasks task={task} slug={slug} key={task.id} />;
             }
+            // {
+            // } else if (!project.completed) {
+            // return <Tasks task={task} slug={slug} key={task.id} />;
+            // }
           })}
         </div>
       </div>
