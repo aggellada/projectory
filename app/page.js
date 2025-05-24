@@ -11,7 +11,6 @@ export default async function Home() {
 
   return (
     <div className="relative w-full min-h-screen flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 text-white overflow-hidden">
-      {/* Subtle background SVG blob */}
       <div className="absolute top-[-200px] left-[-150px] w-[600px] h-[600px] bg-blue-600 opacity-20 rounded-full blur-[200px] z-0" />
       <div className="absolute bottom-[-150px] right-[-100px] w-[400px] h-[400px] bg-green-500 opacity-20 rounded-full blur-[150px] z-0" />
 
@@ -34,7 +33,7 @@ export default async function Home() {
         </div>
 
         <p className="text-gray-400 mb-2">
-          Manage projects, track tasks, and collaborate with ease.
+          Manage projects, track tasks, and check your progress with ease.
         </p>
         <p className="text-gray-400 mb-8">
           Log in or create an account to access your dashboard.

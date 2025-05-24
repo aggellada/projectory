@@ -120,24 +120,39 @@ export default function ProjectManagement({ projectsData, tasksData }) {
                   (taskArr) =>
                     taskArr.projectId === formObj.id && taskArr.completed
                 ).length;
+
                 const totalCount = tasksData.filter(
                   (taskArr) => taskArr.projectId === formObj.id
                 ).length;
-                const progressPercentage =
-                  (completedCount / totalCount) * 100 || 0;
 
-                const allTasksCompleted = formObj.tasks.every(
-                  (task) => task.completed
-                );
+                const progressPercentage =
+                  totalCount === 0
+                    ? formObj.completed
+                      ? 100
+                      : 0
+                    : (completedCount / totalCount) * 100;
+
+                // const correspondingData = projectsData.find(
+                //   (projData) => projData.projectId === formObj.projectId
+                // );
+
+                // const noTasks =
+                //   formObj.completed && correspondingData.tasks.length === 0
+                //     ? 32
+                //     : 0;
+
+                const allTasksCompleted =
+                  formObj.tasks.length > 0 &&
+                  formObj.tasks.every((task) => task.completed);
 
                 return (
                   <Link href={`/project/${formObj.slug}`} key={formObj.id}>
                     <div
                       className={`flex-col-reverse gap-2 justify-center md:flex-row w-full h-full relative flex border-2 border-gray-700 hover:border-[hsl(263,70%,50%)] p-6 ${
-                        ((formObj.completed && allTasksCompleted) ||
-                          allTasksCompleted) &&
-                        formObj.tasks.length > 0 &&
-                        "bg-green-900"
+                        (formObj.tasks.length === 0 && formObj.completed) ||
+                        allTasksCompleted
+                          ? "bg-green-900"
+                          : ""
                       }`}
                     >
                       <div className="absolute right-6 top-3 flex flex-col items-end">
@@ -149,7 +164,7 @@ export default function ProjectManagement({ projectsData, tasksData }) {
                         </button>
                         {expandIndex === i && (
                           <div className="bg-[#030711] flex flex-col border-2 border-gray-700 w-[100px] z-20">
-                            {formObj.completed || allTasksCompleted ? (
+                            {formObj.completed && allTasksCompleted ? (
                               <button
                                 onClick={(e) => {
                                   undoneProject(formObj.id);

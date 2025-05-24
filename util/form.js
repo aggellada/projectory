@@ -61,7 +61,7 @@ export async function checkAllTasksComplete(projectId) {
   });
 }
 
-export async function updateTask(taskId, field) {
+export async function updateTask(taskId, field, slug) {
   const task = await prisma.task.findUnique({
     where: { id: taskId },
   });
@@ -72,14 +72,16 @@ export async function updateTask(taskId, field) {
     },
     data: {
       [field]: !task[field],
-      role: !task.role,
+      role: field === "completed" ? false : !task.role,
     },
   });
+
+  revalidatePath(`/project/${slug}`);
 
   await checkAllTasksComplete(task.projectId);
 }
 
-export async function doneTaskKanban(taskId, field, kbLower) {
+export async function doneTaskKanban(taskId, field, kbLower, slug) {
   const task = await prisma.task.findUnique({
     where: { id: taskId },
     select: {
@@ -91,23 +93,27 @@ export async function doneTaskKanban(taskId, field, kbLower) {
     },
   });
 
-  const updateCompleted = await prisma.task.update({
+  await prisma.task.update({
     where: {
       id: taskId,
     },
     data: {
       [field]: !task[field],
       [kbLower]: false,
+      role: false,
     },
   });
+
+  revalidatePath(`/project/${slug}`);
 }
 
-export async function deleteTask(taskId) {
+export async function deleteTask(taskId, slug) {
   const deleteTask = await prisma.task.delete({
     where: {
       id: taskId,
     },
   });
+  revalidatePath(`/project/${slug}`);
 }
 
 export async function changeTask(taskId, newValue, slug) {
@@ -124,10 +130,10 @@ export async function changeTask(taskId, newValue, slug) {
 }
 
 export async function doneProject(projectId) {
-  const project = await prisma.project.findUnique({
-    where: { id: projectId },
-    select: { completed: true },
-  });
+  // await prisma.project.findUnique({
+  //   where: { id: projectId },
+  //   select: { completed: true },
+  // });
 
   await prisma.project.update({
     where: {
@@ -144,12 +150,18 @@ export async function doneProject(projectId) {
     },
     data: {
       completed: true,
+      backlog: false,
+      doing: false,
+      review: false,
+      role: false,
     },
   });
+
+  revalidatePath("/dashboard");
 }
 
 export async function undoneProject(projectId) {
-  const project = await prisma.project.findUnique({
+  await prisma.project.findUnique({
     where: { id: projectId },
     select: { completed: true },
   });
@@ -169,8 +181,11 @@ export async function undoneProject(projectId) {
     },
     data: {
       completed: false,
+      role: false,
     },
   });
+
+  revalidatePath("/dashboard");
 }
 
 export async function deleteProject(projectId) {
@@ -185,6 +200,8 @@ export async function deleteProject(projectId) {
       id: projectId,
     },
   });
+
+  revalidatePath("/dashboard");
 }
 
 export async function getProgress(taskId) {

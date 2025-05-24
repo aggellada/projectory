@@ -26,7 +26,10 @@ export default async function ProjectPage({ params }) {
 
   const completedCount = tasks.filter((taskArr) => taskArr.completed).length;
   const totalCount = tasks.length;
-  const progressPercentage = (completedCount / totalCount) * 100 || 0;
+  const progressPercentage =
+    project.completed && totalCount === 0
+      ? 100
+      : (completedCount / totalCount) * 100 || 0;
 
   const kanbanBoard = ["Backlog", "Doing", "Review", "Completed"];
 
@@ -134,6 +137,7 @@ export default async function ProjectPage({ params }) {
                           task={task}
                           kbLower={kbLower}
                           key={task.id}
+                          slug={slug}
                         />
                       );
                     }

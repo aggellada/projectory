@@ -30,6 +30,7 @@ const Modal = forwardRef(function ({ handleCloseModal }, ref) {
           className="w-[300px] border-2 rounded-sm bg-[hsl(216,37%,13%)] border-gray-600"
           id="project"
           name="project"
+          required
         />
         <label>Date: </label>
         <input
@@ -38,6 +39,7 @@ const Modal = forwardRef(function ({ handleCloseModal }, ref) {
           id="date"
           name="date"
           min={new Date().toISOString().split("T")[0]}
+          required
         />
         <label htmlFor="description">Description: </label>
         <textarea
@@ -45,6 +47,7 @@ const Modal = forwardRef(function ({ handleCloseModal }, ref) {
           className="w-[300px] border-2 rounded-sm bg-[hsl(216,37%,13%)] border-gray-600"
           id="description"
           name="description"
+          required
         />
         <div className="flex gap-4 justify-end pt-4 ">
           <button

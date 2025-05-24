@@ -37,7 +37,7 @@ export default function Tasks({ task, slug }) {
             <div className="flex gap-4 md:gap-9 pr-6">
               <select
                 id="actions"
-                onChange={(e) => updateTask(task.id, e.target.value)}
+                onChange={(e) => updateTask(task.id, e.target.value, slug)}
                 defaultValue=""
               >
                 <option value="" disabled>
@@ -72,7 +72,7 @@ export default function Tasks({ task, slug }) {
               )}
               <button
                 onClick={() => {
-                  deleteTask(task.id);
+                  deleteTask(task.id, slug);
                 }}
               >
                 <Trash2 className="hover:text-red-500 transition hover:cursor-pointer" />

@@ -3,7 +3,7 @@
 import { doneTaskKanban, updateTask } from "@/util/form";
 import { Check, X } from "lucide-react";
 
-export default function KanbanTask({ task, kbLower }) {
+export default function KanbanTask({ task, kbLower, slug }) {
   const colorMap = {
     backlog: "bg-red-800",
     doing: "bg-yellow-800",
@@ -17,11 +17,13 @@ export default function KanbanTask({ task, kbLower }) {
     >
       <h1 className="text-lg">{task.title}</h1>
       <div className="flex gap-2 items-center justify-end">
-        <button onClick={() => updateTask(task.id, kbLower)}>
+        <button onClick={() => updateTask(task.id, kbLower, slug)}>
           <X className="hover:text-red-600 transition hover:cursor-pointer" />
         </button>
         {task.completed === false && (
-          <button onClick={() => doneTaskKanban(task.id, "completed", kbLower)}>
+          <button
+            onClick={() => doneTaskKanban(task.id, "completed", kbLower, slug)}
+          >
             <Check className="hover:text-green-400 transition hover:cursor-pointer" />
           </button>
         )}
